@@ -27,3 +27,48 @@ API and datastore backend of a web forum for a small number of users (&lt; 100).
     - filter tag
     - sort by date
     - sort by like count
+
+## Data Plan:
+
+  https://dbdiagram.io/d/68272cb01227bdcb4ea2a66e
+
+  - user
+    - user_id
+    - user_guid
+    - user_category_id
+    - first_name - encrypted
+    - last_name - encrypted
+    - email - encrypted
+    - username - encrypted
+    - password - encrypted
+    - date_created
+  - user_category
+    - user_category_id
+    - user_category_name (regular, moderator)
+  - post
+    - post_id
+    - post_guid
+    - title
+    - content
+    - user_id
+    - date_created
+  - post_comment
+    - post_comment_id
+    - post_comment_guid
+    - post_id
+    - user_id
+    - content
+    - date_created
+  - post_like
+    - post_like_id
+    - post_id
+    - user_id
+    - date_created
+  - post_tag
+    - post_tag_id
+    - tag_id
+    - user_id
+    - date_created
+  - tag
+    - tag_id
+    - tag_name (misleading or false information)
