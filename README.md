@@ -72,3 +72,15 @@ API and datastore backend of a web forum for a small number of users (&lt; 100).
   - tag
     - tag_id
     - tag_name (misleading or false information)
+
+## Endpoints Plan:
+  - login
+  - logout
+  - create post
+  - get posts
+  - like post
+  - unlike post
+  - comment on post
+  - tag post
+
+
