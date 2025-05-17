@@ -9,6 +9,7 @@ namespace WebForumApi.Data;
 
 [ExcludeFromCodeCoverage]
 public class DataAccess(
+  ILogger<DataAccess> logger,
   IOptions<DatabaseSettings> databaseSettings
 )
   : IDataAccess
@@ -19,53 +20,61 @@ public class DataAccess(
   )
     where T : new()
   {
-    var result = new List<T>();
-
-    using var connection = new SqlConnection(databaseSettings.Value.ConnectionString);
-    using var command = new SqlCommand(query, connection);
-
-    command.CommandType = CommandType.StoredProcedure;
-
-    if (parameters is not null)
+    try
     {
-      foreach (var parameter in parameters)
+      var result = new List<T>();
+
+      using var connection = new SqlConnection(databaseSettings.Value.ConnectionString);
+      using var command = new SqlCommand(query, connection);
+
+      command.CommandType = CommandType.StoredProcedure;
+
+      if (parameters is not null)
       {
-        command.Parameters.AddWithValue(parameter.Key, parameter.Value ?? DBNull.Value);
-      }
-    }
-
-    connection.Open();
-
-    using var reader = command.ExecuteReader();
-
-    var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-    var columnNames = new HashSet<string>(
-      Enumerable.Range(0, reader.FieldCount).Select(reader.GetName),
-      StringComparer.OrdinalIgnoreCase
-    );
-
-    for (var i = 0; i < reader.FieldCount; i++)
-    {
-      columnNames.Add(reader.GetName(i));
-    }
-
-    while (reader.Read())
-    {
-      var item = new T();
-
-      foreach (var property in properties)
-      {
-        if (columnNames.Contains(property.Name) && !reader.IsDBNull(reader.GetOrdinal(property.Name)))
+        foreach (var parameter in parameters)
         {
-          var columnValue = reader.GetValue(reader.GetOrdinal(property.Name));
-          property.SetValue(item, Convert.ChangeType(columnValue, property.PropertyType));
+          command.Parameters.AddWithValue(parameter.Key, parameter.Value ?? DBNull.Value);
         }
       }
 
-      result.Add(item);
-    }
+      connection.Open();
 
-    return result;
+      using var reader = command.ExecuteReader();
+
+      var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+      var columnNames = new HashSet<string>(
+        Enumerable.Range(0, reader.FieldCount).Select(reader.GetName),
+        StringComparer.OrdinalIgnoreCase
+      );
+
+      for (var i = 0; i < reader.FieldCount; i++)
+      {
+        columnNames.Add(reader.GetName(i));
+      }
+
+      while (reader.Read())
+      {
+        var item = new T();
+
+        foreach (var property in properties)
+        {
+          if (columnNames.Contains(property.Name) && !reader.IsDBNull(reader.GetOrdinal(property.Name)))
+          {
+            var columnValue = reader.GetValue(reader.GetOrdinal(property.Name));
+            property.SetValue(item, Convert.ChangeType(columnValue, property.PropertyType));
+          }
+        }
+
+        result.Add(item);
+      }
+
+      return result;
+    }
+    catch (Exception ex)
+    {
+      logger.LogError(ex, "Unable to execute: {StoredProcedure}", query);
+      throw;
+    }
   }
 }
