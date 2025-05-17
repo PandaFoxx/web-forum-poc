@@ -1,14 +1,27 @@
-﻿using WebForumApi.Application.User.Login;
+﻿using Microsoft.Extensions.Options;
+using NSubstitute;
+using WebForumApi.Application.User.Login;
+using WebForumApi.Domain;
 
 namespace WebForumApi.Test;
 
 public class UserLoginHandlerTests
 {
+    private readonly IDataAccess dataAccess;
+    private readonly IOptions<DatabaseSettings> databaseSettings;
     private readonly UserLoginHandler handler;
 
     public UserLoginHandlerTests()
     {
-        handler = new UserLoginHandler();
+        dataAccess = Substitute.For<IDataAccess>();
+
+        databaseSettings = Options.Create(new DatabaseSettings
+        {
+            ConnectionString = "connection_string",
+            Passphrase = "pass_phrase"
+        });
+
+        handler = new UserLoginHandler(dataAccess, databaseSettings);
     }
 
     [Fact]
