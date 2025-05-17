@@ -14,7 +14,7 @@ public class DataAccess(
 )
   : IDataAccess
 {
-  public List<T> ExecuteProcedure<T>(
+  public async Task<List<T>> ExecuteProcedureAsync<T>(
     string query,
     Dictionary<string, object> parameters
   )
@@ -37,9 +37,9 @@ public class DataAccess(
         }
       }
 
-      connection.Open();
+      await connection.OpenAsync();
 
-      using var reader = command.ExecuteReader();
+      using var reader = await command.ExecuteReaderAsync();
 
       var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
@@ -53,7 +53,7 @@ public class DataAccess(
         columnNames.Add(reader.GetName(i));
       }
 
-      while (reader.Read())
+      while (await reader.ReadAsync())
       {
         var item = new T();
 
