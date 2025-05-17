@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using WebForumApi.Data;
+using WebForumApi.Domain;
 
 [ExcludeFromCodeCoverage]
 internal class Program
@@ -12,6 +14,10 @@ internal class Program
     );
 
     builder.Services.AddControllers();
+
+    builder.Services.AddScoped<IDataAccess, DataAccess>();
+
+    builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection(DatabaseSettings.Position));
 
     var app = builder.Build();
     app.UseRouting();
