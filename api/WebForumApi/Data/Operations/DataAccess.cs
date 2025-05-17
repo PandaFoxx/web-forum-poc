@@ -1,4 +1,5 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
@@ -6,6 +7,7 @@ using WebForumApi.Domain;
 
 namespace WebForumApi.Data;
 
+[ExcludeFromCodeCoverage]
 public class DataAccess(
   IOptions<DatabaseSettings> databaseSettings
 )
