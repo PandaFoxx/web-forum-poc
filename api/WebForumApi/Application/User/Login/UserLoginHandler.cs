@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using WebForumApi.Domain;
 
@@ -23,7 +24,8 @@ public sealed class UserLoginDto
 
 public sealed class UserLoginHandler(
   IDataAccess dataAccess,
-  IOptions<DatabaseSettings> databaseSettings
+  IOptions<DatabaseSettings> databaseSettings,
+  IMemoryCache cache
 )
   : IRequestHandler<UserLoginRequest, UserLoginResponse>
 {
@@ -47,6 +49,13 @@ public sealed class UserLoginHandler(
     }
 
     var accessToken = TokenGenerator.Generate();
+
+    cache.Set(
+      accessToken,
+      result.First().UserGuid,
+      new MemoryCacheEntryOptions()
+        .SetSlidingExpiration(TimeSpan.FromMinutes(10))
+    );
 
     return new UserLoginResponse
     {

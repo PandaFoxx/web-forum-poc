@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using WebForumApi.Application.User.Login;
 using WebForumApi.Domain;
@@ -9,11 +10,13 @@ public class UserLoginHandlerTests
 {
     private readonly IDataAccess dataAccess;
     private readonly IOptions<DatabaseSettings> databaseSettings;
+    private readonly IMemoryCache cache;
     private readonly UserLoginHandler handler;
 
     public UserLoginHandlerTests()
     {
         dataAccess = Substitute.For<IDataAccess>();
+        cache = Substitute.For<IMemoryCache>();
 
         databaseSettings = Options.Create(new DatabaseSettings
         {
@@ -21,7 +24,7 @@ public class UserLoginHandlerTests
             Passphrase = "pass_phrase"
         });
 
-        handler = new UserLoginHandler(dataAccess, databaseSettings);
+        handler = new UserLoginHandler(dataAccess, databaseSettings, cache);
     }
 
     [Fact]
