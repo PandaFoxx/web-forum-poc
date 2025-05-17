@@ -39,7 +39,12 @@ public sealed class UserLoginHandler(
       { nameof(request.Password), request.Password },
     };
 
-    var result = await dataAccess.ExecuteProcedureAsync<UserLoginDto>("UserLoginProcedure", parameters);
+    var result = await dataAccess.ExecuteProcedureAsync<UserLoginDto>(StoredProcedures.UserLoginProcedure, parameters);
+
+    if ((result?.Count ?? 0) == 0)
+    {
+      throw new UnauthorizedAccessException(Messages.UnauthorizedAccess);
+    }
 
     return new UserLoginResponse();
   }

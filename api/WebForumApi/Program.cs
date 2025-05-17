@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using WebForumApi.Controllers;
 using WebForumApi.Data;
 using WebForumApi.Domain;
 
@@ -13,7 +14,9 @@ internal class Program
       config.RegisterServicesFromAssembly(typeof(Program).Assembly)
     );
 
-    builder.Services.AddControllers();
+    builder.Services.AddControllers(options =>
+      options.Filters.Add<ErrorHandlerAttribute>()
+    );
 
     builder.Services.AddScoped<IDataAccess, DataAccess>();
 

@@ -33,8 +33,45 @@ public class UserLoginHandlerTests
             Password = "password"
         };
 
+        var dto = new List<UserLoginDto>
+        {
+            new ()
+            {
+                UserGuid = Guid.NewGuid(),
+            }
+        };
+
+        dataAccess
+            .ExecuteProcedureAsync<UserLoginDto>(
+                Arg.Any<string>(),
+                Arg.Any<Dictionary<string, object>>())
+            .Returns(dto);
+
         var sut = await handler.Handle(request, CancellationToken.None);
 
         Assert.Null(sut.AccessToken);
+    }
+
+    [Fact]
+    public async Task Handle_Unauthorized()
+    {
+        var request = new UserLoginRequest
+        {
+            Username = "username",
+            Password = "password"
+        };
+
+        var dto = new List<UserLoginDto>();
+
+        dataAccess
+            .ExecuteProcedureAsync<UserLoginDto>(
+                Arg.Any<string>(),
+                Arg.Any<Dictionary<string, object>>())
+            .Returns(dto);
+
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+        {
+            await handler.Handle(request, CancellationToken.None);
+        });
     }
 }
