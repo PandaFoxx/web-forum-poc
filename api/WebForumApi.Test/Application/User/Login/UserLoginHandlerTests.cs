@@ -49,7 +49,7 @@ public class UserLoginHandlerTests
 
         var sut = await handler.Handle(request, CancellationToken.None);
 
-        Assert.Null(sut.AccessToken);
+        Assert.NotNull(sut.AccessToken);
     }
 
     [Fact]

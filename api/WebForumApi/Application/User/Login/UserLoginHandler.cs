@@ -46,6 +46,11 @@ public sealed class UserLoginHandler(
       throw new UnauthorizedAccessException(Messages.UnauthorizedAccess);
     }
 
-    return new UserLoginResponse();
+    var accessToken = TokenGenerator.Generate();
+
+    return new UserLoginResponse
+    {
+      AccessToken = accessToken
+    };
   }
 }
