@@ -40,7 +40,11 @@ public class DataAccess(
 
     var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-    var columnNames = new HashSet<string>();
+    var columnNames = new HashSet<string>(
+      Enumerable.Range(0, reader.FieldCount).Select(reader.GetName),
+      StringComparer.OrdinalIgnoreCase
+    );
+
     for (var i = 0; i < reader.FieldCount; i++)
     {
       columnNames.Add(reader.GetName(i));
