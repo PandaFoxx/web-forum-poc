@@ -13,7 +13,7 @@ public class DataAccess(
 )
   : IDataAccess
 {
-  public List<T> SelectMultipleRecords<T>(
+  public List<T> ExecuteProcedure<T>(
     string query,
     Dictionary<string, object> parameters
   )
