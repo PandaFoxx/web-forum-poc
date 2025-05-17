@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "dotnet",
+      "task": "watch WebForumApi",
+      "file": "${workspaceFolder}/api/WebForumApi/WebForumApi.csproj",
+      "problemMatcher": [],
+      "label": "dotnet: watch WebForumApi"
+    },
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/api/WebForumApi/WebForumApi.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "Build WebForumApi"
+    }
+  ]
+}
