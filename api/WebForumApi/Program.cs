@@ -18,6 +18,8 @@ internal class Program
       options.Filters.Add<ErrorHandlerAttribute>()
     );
 
+    builder.Services.AddMemoryCache();
+
     builder.Services.AddScoped<IDataAccess, DataAccess>();
 
     builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection(DatabaseSettings.Position));
