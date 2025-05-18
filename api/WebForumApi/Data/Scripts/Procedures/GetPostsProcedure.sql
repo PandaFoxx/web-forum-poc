@@ -1,6 +1,7 @@
 /*******************************************************************************************
 DATE          AUTHOR              NOTE
 2025-05-18    Kyle Champion       Initial stored procedure to get posts for anonymous users.
+2025-05-18    Kyle Champion       Implement dynamic sorting by post date or like count.
 
 Rules:
 - No restriction on user category.
@@ -24,8 +25,8 @@ EXEC GetPostsProcedure
 	--@FilterDateFrom = NULL,
 	--@FilterDateTo = NULL,
 	--@FilterTagId = NULL,
-	--@SortColumn = NULL,
-	--@SortDirection = NULL,
+	@SortColumn = NULL, -- 'post_date' or 'like_count'
+	@SortDirection = NULL, -- 'ASC' or 'DESC'
 	@PageSize = 4,
 	@PageNumber = 1
 
@@ -36,8 +37,8 @@ CREATE OR ALTER PROCEDURE GetPostsProcedure
 	--@FilterDateFrom DATETIME,
 	--@FilterDateTo DATETIME,
 	--@FilterTagId INT,
-	--@SortColumn VARCHAR(50),
-	--@SortDirection VARCHAR(4),
+	@SortColumn VARCHAR(50),
+	@SortDirection VARCHAR(4),
 	@PageSize INT,
 	@PageNumber INT
 AS
@@ -90,7 +91,11 @@ BEGIN
 	INNER JOIN [dbo].[user] pu ON pu.[user_id] = p.[user_id]
 	INNER JOIN [dbo].[user] cu ON cu.[user_id] = c.[user_id]
 	LEFT JOIN [dbo].[tag] t ON t.[tag_id] = p.[tag_id]
-	ORDER BY p.[date_created]
+	ORDER BY
+		 CASE WHEN @SortColumn = 'post_date' AND @SortDirection = 'ASC' THEN p.[date_created] END ASC
+		,CASE WHEN @SortColumn = 'post_date' AND @SortDirection = 'DESC' THEN p.[date_created] END DESC
+		,CASE WHEN @SortColumn = 'like_count' AND @SortDirection = 'ASC' THEN pl.[like_count] END ASC
+		,CASE WHEN @SortColumn = 'like_count' AND @SortDirection = 'DESC' THEN pl.[like_count] END DESC
 	OFFSET (@PageNumber - 1) * @PageSize ROWS
 	FETCH NEXT @PageSize ROWS ONLY;
 END
