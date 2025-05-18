@@ -5,7 +5,7 @@ DATE          AUTHOR              NOTE
 2025-05-18    Kyle Champion       Implement dynamic filtering of posts by author.
 2025-05-18    Kyle Champion       Implement dynamic filtering of posts by tag.
 2025-05-18    Kyle Champion       Implement dynamic filtering of posts by post date.
-2025-05-18    Kyle Champion       Add a window to get total number of records.
+2025-05-18    Kyle Champion       Separate queries to get total number of records.
 
 Rules:
 - No restriction on user category.
@@ -48,7 +48,33 @@ CREATE OR ALTER PROCEDURE GetPostsProcedure
 AS
 BEGIN
 	---------------------------
-	-- 1. Count likes per post
+	-- 1. Filter posts
+	---------------------------
+	DECLARE @PostsFiltered TABLE
+	(
+		 [post_id] INT
+	);
+
+	INSERT INTO @PostsFiltered
+	SELECT
+		 p.[post_id]
+	FROM [dbo].[post] p
+	INNER JOIN [dbo].[user] pu ON pu.[user_id] = p.[user_id]
+	WHERE ISNULL(@FilterUserGuid, pu.[user_guid]) = pu.[user_guid]
+	AND (@FilterTagId IS NULL OR @FilterTagId = p.[tag_id])
+	AND (@FilterDateFrom IS NULL OR @FilterDateFrom <= p.date_created)
+	AND (@FilterDateTo IS NULL OR @FilterDateTo >= p.date_created)
+
+	---------------------------
+	-- 2. Count filtered posts
+	---------------------------
+	DECLARE @PostCount INT;
+
+	SELECT @PostCount = COUNT(1)
+	FROM @PostsFiltered
+
+	---------------------------
+	-- 3. Count likes per filtered post
 	---------------------------
 	DECLARE @PostLikes TABLE
 	(
@@ -61,11 +87,12 @@ BEGIN
 		 p.[post_id]
 		,COUNT(l.[user_id]) AS [like_count]
 	FROM [dbo].[post] p
+	INNER JOIN @PostsFiltered pf ON pf.[post_id] = p.[post_id]
 	LEFT JOIN [dbo].[post_like] l ON l.[post_id] = p.[post_id]
 	GROUP BY p.[post_id]
 
 	---------------------------
-	-- 2. Get posts, comments, likes, tags and users
+	-- 4. Get sorted details of filtered posts
 	---------------------------
 	SELECT
 		 p.[post_guid]
@@ -91,17 +118,14 @@ BEGIN
 			,' '
 			,CAST(DECRYPTBYPASSPHRASE(@Passphrase, cu.[last_name]) AS NVARCHAR(MAX))
 		) AS [comment_user_name]
-		,COUNT(1) OVER() AS [post_count]
+		,@PostCount AS [post_count]
 	FROM [dbo].[post] p
-	LEFT JOIN [dbo].[post_comment] c ON c.[post_id] = p.[post_id]
+	INNER JOIN @PostsFiltered pf ON pf.[post_id] = p.[post_id]
 	INNER JOIN @PostLikes pl ON pl.[post_id] = p.[post_id]
 	INNER JOIN [dbo].[user] pu ON pu.[user_id] = p.[user_id]
-	INNER JOIN [dbo].[user] cu ON cu.[user_id] = c.[user_id]
+	LEFT JOIN [dbo].[post_comment] c ON c.[post_id] = p.[post_id]
+	LEFT JOIN [dbo].[user] cu ON cu.[user_id] = c.[user_id]
 	LEFT JOIN [dbo].[tag] t ON t.[tag_id] = p.[tag_id]
-	WHERE ISNULL(@FilterUserGuid, pu.[user_guid]) = pu.[user_guid]
-	AND (@FilterTagId IS NULL OR @FilterTagId = p.[tag_id])
-	AND (@FilterDateFrom IS NULL OR @FilterDateFrom <= p.date_created)
-	AND (@FilterDateTo IS NULL OR @FilterDateTo >= p.date_created)
 	ORDER BY
 		 CASE WHEN @SortColumn = 'post_date' AND @SortDirection = 'ASC' THEN p.[date_created] END ASC
 		,CASE WHEN @SortColumn = 'post_date' AND @SortDirection = 'DESC' THEN p.[date_created] END DESC
