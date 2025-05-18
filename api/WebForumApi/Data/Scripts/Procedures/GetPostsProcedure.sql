@@ -4,6 +4,7 @@ DATE          AUTHOR              NOTE
 2025-05-18    Kyle Champion       Implement dynamic sorting by post date or like count.
 2025-05-18    Kyle Champion       Implement dynamic filtering of posts by author.
 2025-05-18    Kyle Champion       Implement dynamic filtering of posts by tag.
+2025-05-18    Kyle Champion       Implement dynamic filtering of posts by post date.
 
 Rules:
 - No restriction on user category.
@@ -23,12 +24,12 @@ Example usage:
 
 EXEC GetPostsProcedure
 	@Passphrase = 'secret',
-	@FilterUserGuid = NULL, -- 'E0689550-A67B-4C3F-BA3F-6B08FA63D829'
-	--@FilterDateFrom = NULL,
-	--@FilterDateTo = NULL,
-	@FilterTagId = NULL, -- 1
-	@SortColumn = NULL, -- 'post_date' or 'like_count'
-	@SortDirection = NULL, -- 'ASC' or 'DESC'
+	@FilterUserGuid = NULL, --'E0689550-A67B-4C3F-BA3F-6B08FA63D829',
+	@FilterDateFrom = '2025-05-18 18:32:08.303', --NULL,
+	@FilterDateTo = '2025-05-18 18:32:13.660', --NULL,
+	@FilterTagId = NULL, --1,
+	@SortColumn = 'post_date',
+	@SortDirection = 'ASC',
 	@PageSize = 4,
 	@PageNumber = 1
 
@@ -36,8 +37,8 @@ EXEC GetPostsProcedure
 CREATE OR ALTER PROCEDURE GetPostsProcedure
   @Passphrase VARCHAR(64),
 	@FilterUserGuid UNIQUEIDENTIFIER,
-	--@FilterDateFrom DATETIME,
-	--@FilterDateTo DATETIME,
+	@FilterDateFrom DATETIME,
+	@FilterDateTo DATETIME,
 	@FilterTagId INT,
 	@SortColumn VARCHAR(50),
 	@SortDirection VARCHAR(4),
@@ -53,6 +54,7 @@ BEGIN
 		 [post_id] INT
 		,[like_count] INT
 	);
+
 	INSERT INTO @PostLikes
 	SELECT
 		 p.[post_id]
@@ -95,6 +97,8 @@ BEGIN
 	LEFT JOIN [dbo].[tag] t ON t.[tag_id] = p.[tag_id]
 	WHERE ISNULL(@FilterUserGuid, pu.[user_guid]) = pu.[user_guid]
 	AND (@FilterTagId IS NULL OR @FilterTagId = p.[tag_id])
+	AND (@FilterDateFrom IS NULL OR @FilterDateFrom <= p.date_created)
+	AND (@FilterDateTo IS NULL OR @FilterDateTo >= p.date_created)
 	ORDER BY
 		 CASE WHEN @SortColumn = 'post_date' AND @SortDirection = 'ASC' THEN p.[date_created] END ASC
 		,CASE WHEN @SortColumn = 'post_date' AND @SortDirection = 'DESC' THEN p.[date_created] END DESC
