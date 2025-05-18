@@ -2,6 +2,7 @@
 DATE          AUTHOR              NOTE
 2025-05-18    Kyle Champion       Initial stored procedure to get posts for anonymous users.
 2025-05-18    Kyle Champion       Implement dynamic sorting by post date or like count.
+2025-05-18    Kyle Champion       Implement dynamic filtering of posts by author.
 
 Rules:
 - No restriction on user category.
@@ -21,7 +22,7 @@ Example usage:
 
 EXEC GetPostsProcedure
 	@Passphrase = 'secret',
-	--@FilterUserGuid = NULL,
+	@FilterUserGuid = NULL, -- 'E0689550-A67B-4C3F-BA3F-6B08FA63D829'
 	--@FilterDateFrom = NULL,
 	--@FilterDateTo = NULL,
 	--@FilterTagId = NULL,
@@ -33,7 +34,7 @@ EXEC GetPostsProcedure
 *******************************************************************************************/
 CREATE OR ALTER PROCEDURE GetPostsProcedure
     @Passphrase VARCHAR(64),
-	--@FilterUserGuid UNIQUEIDENTIFIER,
+	@FilterUserGuid UNIQUEIDENTIFIER,
 	--@FilterDateFrom DATETIME,
 	--@FilterDateTo DATETIME,
 	--@FilterTagId INT,
@@ -91,6 +92,7 @@ BEGIN
 	INNER JOIN [dbo].[user] pu ON pu.[user_id] = p.[user_id]
 	INNER JOIN [dbo].[user] cu ON cu.[user_id] = c.[user_id]
 	LEFT JOIN [dbo].[tag] t ON t.[tag_id] = p.[tag_id]
+	WHERE ISNULL(@FilterUserGuid, pu.[user_guid]) = pu.[user_guid]
 	ORDER BY
 		 CASE WHEN @SortColumn = 'post_date' AND @SortDirection = 'ASC' THEN p.[date_created] END ASC
 		,CASE WHEN @SortColumn = 'post_date' AND @SortDirection = 'DESC' THEN p.[date_created] END DESC
