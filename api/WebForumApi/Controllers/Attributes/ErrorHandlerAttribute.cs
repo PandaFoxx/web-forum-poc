@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -12,6 +13,16 @@ public sealed class ErrorResponse : ObjectResult
     : base(value)
   {
     StatusCode = StatusCodes.Status500InternalServerError;
+  }
+}
+
+[ExcludeFromCodeCoverage]
+public sealed class ForbiddenObjectResult : ObjectResult
+{
+  public ForbiddenObjectResult(object value)
+    : base(value)
+  {
+    StatusCode = StatusCodes.Status403Forbidden;
   }
 }
 
@@ -37,6 +48,7 @@ public sealed class ErrorHandlerAttribute(
     {
       MissingFieldException => new NotFoundObjectResult(errorResponse),
       UnauthorizedAccessException => new UnauthorizedObjectResult(errorResponse),
+      SecurityException => new ForbiddenObjectResult(errorResponse),
       ArgumentNullException => new BadRequestObjectResult(errorResponse),
       ArgumentException => new BadRequestObjectResult(errorResponse),
       ValidationException => new BadRequestObjectResult(errorResponse),

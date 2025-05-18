@@ -20,7 +20,8 @@ internal class Program
 
     builder.Services.AddMemoryCache();
 
-    builder.Services.AddScoped<IDataAccess, DataAccess>();
+    builder.Services.AddTransient<IDataAccess, DataAccess>();
+    builder.Services.AddTransient<ISessionManager, SessionManager>();
 
     builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection(DatabaseSettings.Position));
 
