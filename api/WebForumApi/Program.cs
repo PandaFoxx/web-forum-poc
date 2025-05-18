@@ -3,6 +3,7 @@ using FluentValidation;
 using WebForumApi.Application.Post.Add;
 using WebForumApi.Application.Post.Comment;
 using WebForumApi.Application.Post.Like;
+using WebForumApi.Application.Post.Tag;
 using WebForumApi.Controllers;
 using WebForumApi.Data;
 using WebForumApi.Domain;
@@ -31,6 +32,7 @@ internal class Program
     builder.Services.AddTransient<IValidator<AddPostRequest>, AddPostValidator>();
     builder.Services.AddTransient<IValidator<AddPostCommentRequest>, AddPostCommentValidator>();
     builder.Services.AddTransient<IValidator<LikePostRequest>, LikePostValidator>();
+    builder.Services.AddTransient<IValidator<TagPostRequest>, TagPostValidator>();
 
     // Register settings
     builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection(DatabaseSettings.Position));

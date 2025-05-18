@@ -77,4 +77,35 @@ public class DataAccess(
       throw;
     }
   }
+
+  public async Task ExecuteProcedureAsync(
+    string query,
+    Dictionary<string, object> parameters
+  )
+  {
+    try
+    {
+      using var connection = new SqlConnection(databaseSettings.Value.ConnectionString);
+      using var command = new SqlCommand(query, connection);
+
+      command.CommandType = CommandType.StoredProcedure;
+
+      if (parameters is not null)
+      {
+        foreach (var parameter in parameters)
+        {
+          command.Parameters.AddWithValue(parameter.Key, parameter.Value ?? DBNull.Value);
+        }
+      }
+
+      await connection.OpenAsync();
+
+      await command.ExecuteNonQueryAsync();
+    }
+    catch (Exception ex)
+    {
+      logger.LogError(ex, "Unable to execute: {StoredProcedure}", query);
+      throw;
+    }
+  }
 }

@@ -154,6 +154,40 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Tag Post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Access-Token",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"postGuid\": \"81FF1E76-4AA8-4901-89F4-E228C720F84F\",\r\n    \"tagId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/api/post/tag",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"api",
+								"post",
+								"tag"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
