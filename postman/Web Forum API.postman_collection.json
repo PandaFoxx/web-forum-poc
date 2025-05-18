@@ -214,7 +214,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{api_host}}/api/post?filterUserGuid=&filterDateFrom=&filterDateTo=&filterTagId=&sortColumn=&sortDirection=&pageSize=&pageNumber",
+							"raw": "{{api_host}}/api/post?filterUserGuid=&filterDateFrom=&filterDateTo=&filterTagId=&sortColumn=&sortDirection=&pageSize=&pageNumber=",
 							"host": [
 								"{{api_host}}"
 							],
@@ -253,7 +253,7 @@
 								},
 								{
 									"key": "pageNumber",
-									"value": null
+									"value": ""
 								}
 							]
 						}
