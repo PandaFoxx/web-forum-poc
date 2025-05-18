@@ -5,6 +5,7 @@ DATE          AUTHOR              NOTE
 2025-05-18    Kyle Champion       Implement dynamic filtering of posts by author.
 2025-05-18    Kyle Champion       Implement dynamic filtering of posts by tag.
 2025-05-18    Kyle Champion       Implement dynamic filtering of posts by post date.
+2025-05-18    Kyle Champion       Add a window to get total number of records.
 
 Rules:
 - No restriction on user category.
@@ -89,6 +90,7 @@ BEGIN
 			,' '
 			,CAST(DECRYPTBYPASSPHRASE(@Passphrase, cu.[last_name]) AS NVARCHAR(MAX))
 		) AS [comment_user_name]
+		,COUNT(1) OVER() AS [post_count]
 	FROM [dbo].[post] p
 	LEFT JOIN [dbo].[post_comment] c ON c.[post_id] = p.[post_id]
 	INNER JOIN @PostLikes pl ON pl.[post_id] = p.[post_id]
