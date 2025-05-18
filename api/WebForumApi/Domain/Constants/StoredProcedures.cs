@@ -7,4 +7,5 @@ public static class StoredProcedures
   public const string AddPostCommentProcedure = "AddPostCommentProcedure";
   public const string LikePostProcedure = "LikePostProcedure";
   public const string TagPostProcedure = "TagPostProcedure";
+  public const string GetPostsProcedure = "GetPostsProcedure";
 }

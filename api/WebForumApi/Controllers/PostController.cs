@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebForumApi.Application.Post.Add;
 using WebForumApi.Application.Post.Comment;
+using WebForumApi.Application.Post.Get;
 using WebForumApi.Application.Post.Like;
 using WebForumApi.Application.Post.Tag;
 
@@ -64,5 +65,14 @@ public sealed class PostController(
 
     await mediator.Send(request, cancellationToken);
     return NoContent();
+  }
+
+  [HttpGet]
+  public async Task<IActionResult> GetPosts(
+    [FromQuery] GetPostsRequest request,
+    CancellationToken cancellationToken
+  )
+  {
+    return Ok(await mediator.Send(request, cancellationToken));
   }
 }
