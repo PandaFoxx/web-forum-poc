@@ -1,4 +1,3 @@
-using System.Security;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace WebForumApi.Domain;
@@ -10,12 +9,13 @@ public sealed class SessionManager(
 {
   public Guid GetCachedUser(string token)
   {
+    if (string.IsNullOrWhiteSpace(token))
+      throw new UnauthorizedAccessException(Messages.MissingAccessToken);
+
     var cacheValue = cache.Get(token);
 
     if (!Guid.TryParse(cacheValue?.ToString(), out var userGuid) || userGuid == Guid.Empty)
-    {
-      throw new SecurityException(Messages.ForbiddenError);
-    }
+      throw new UnauthorizedAccessException(Messages.UnauthorizedAccess);
 
     return userGuid;
   }
