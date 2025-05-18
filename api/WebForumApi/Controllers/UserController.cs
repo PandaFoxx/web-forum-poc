@@ -10,7 +10,6 @@ namespace WebForumApi.Controllers;
 [Route("api/[controller]")]
 public sealed class UserController(IMediator mediator)
   : ControllerBase
-
 {
   [HttpPost]
   public async Task<IActionResult> Login(
