@@ -36,6 +36,7 @@ internal class Program
 
     // Register settings
     builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection(DatabaseSettings.Position));
+    builder.Services.Configure<PagingSettings>(builder.Configuration.GetSection(PagingSettings.Position));
 
     var app = builder.Build();
     app.UseRouting();
