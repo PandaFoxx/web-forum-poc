@@ -23,7 +23,7 @@ public sealed class PostsResponse
   public Guid PostGuid { get; set; }
   public string PostTitle { get; set; }
   public string PostContent { get; set; }
-  public DateTime PostDateCreated { get; set; }
+  public string PostDateCreated { get; set; }
   public Guid PostUserGuid { get; set; }
   public string PostUserName { get; set; }
   public int LikeCount { get; set; }
@@ -36,7 +36,7 @@ public sealed class CommentsResponse
 {
   public Guid CommentGuid { get; set; }
   public string CommentContent { get; set; }
-  public DateTime CommentDateCreated { get; set; }
+  public string CommentDateCreated { get; set; }
   public string CommentUserName { get; set; }
 }
 
@@ -124,7 +124,7 @@ public sealed class GetPostsHandler(
           PostGuid = b.Key,
           PostTitle = b.First().post_title,
           PostContent = b.First().post_content,
-          PostDateCreated = DateTime.Parse(b.First().post_date_created),
+          PostDateCreated = b.First().post_date_created,
           PostUserGuid = b.First().post_user_guid,
           PostUserName = b.First().post_user_name,
           LikeCount = b.First().like_count,
@@ -135,7 +135,7 @@ public sealed class GetPostsHandler(
             {
               CommentGuid = d.post_comment_guid,
               CommentContent = d.comment_content,
-              CommentDateCreated = DateTime.Parse(d.comment_date_created),
+              CommentDateCreated = d.comment_date_created,
               CommentUserName = d.comment_user_name,
             }).ToList()
         }).ToList()
