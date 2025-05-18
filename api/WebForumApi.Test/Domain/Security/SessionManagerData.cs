@@ -7,10 +7,16 @@ public sealed class SessionManagerData
     [ Guid.NewGuid() ]
   ];
 
-  public static IEnumerable<object[]> ScenarioForbidden =>
+  public static IEnumerable<object[]> ScenarioUnauthorizedCache =>
   [
     [ null ],
     [ 1 ],
     [ Guid.Empty]
+  ];
+
+  public static IEnumerable<object[]> ScenarioUnauthorizedMissingToken =>
+  [
+    [ null ],
+    [ string.Empty ]
   ];
 }

@@ -1,4 +1,3 @@
-using System.Security;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using WebForumApi.Domain;
@@ -41,12 +40,14 @@ public sealed class SessionManagerTests
 
   [Theory]
   [MemberData(
-    nameof(SessionManagerData.ScenarioForbidden),
+    nameof(SessionManagerData.ScenarioUnauthorizedCache),
     MemberType = typeof(SessionManagerData))]
-  public void GetCachedUser_Forbidden(
+  public void GetCachedUser_Unauthorized_When_Missing_Or_Invalid_Cache(
     object cacheValue
   )
   {
+    var token = "token";
+
     cache
       .TryGetValue(Arg.Any<string>(), out Arg.Any<Object>())
       .Returns(call =>
@@ -55,6 +56,19 @@ public sealed class SessionManagerTests
         return true;
       });
 
-    Assert.Throws<SecurityException>(() => sessionManager.GetCachedUser(Arg.Any<string>()));
+    Assert.Throws<UnauthorizedAccessException>(()
+      => sessionManager.GetCachedUser(token));
+  }
+
+  [Theory]
+  [MemberData(
+    nameof(SessionManagerData.ScenarioUnauthorizedMissingToken),
+    MemberType = typeof(SessionManagerData))]
+  public void GetCachedUser_Unauthorized_When_Token_Missing(
+    string token
+  )
+  {
+    Assert.Throws<UnauthorizedAccessException>(()
+      => sessionManager.GetCachedUser(token));
   }
 }
