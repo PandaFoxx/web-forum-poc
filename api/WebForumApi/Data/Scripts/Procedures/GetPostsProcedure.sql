@@ -82,6 +82,7 @@ BEGIN
 		,pl.[like_count]
 		,t.[tag_id]
 		,t.[tag_name]
+		,c.[post_comment_guid]
 		,c.[content] AS [comment_content]
 		,c.[date_created] AS [comment_date_created]
 		,CONCAT
