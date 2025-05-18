@@ -1,4 +1,5 @@
 using System.Security;
+using FluentValidation;
 using MediatR;
 using WebForumApi.Domain;
 
@@ -22,9 +23,21 @@ public sealed class AddPostRequest
   public string Content { get; set; }
 }
 
+public sealed class AddPostValidator
+  : AbstractValidator<AddPostRequest>
+{
+  public AddPostValidator()
+  {
+    RuleFor(x => x.Title).Length(1, 200);
+
+    RuleFor(x => x.Content).Length(1, 1000);
+  }
+}
+
 public sealed class AddPostHandler(
   ISessionManager sessionManager,
-  IDataAccess dataAccess
+  IDataAccess dataAccess,
+  IValidator<AddPostRequest> validator
 )
   : IRequestHandler<AddPostRequest, AddPostResponse>
 {
@@ -33,6 +46,8 @@ public sealed class AddPostHandler(
     CancellationToken cancellationToken)
   {
     var userGuid = sessionManager.GetCachedUser(request.AccessToken);
+
+    await validator.ValidateAndThrowAsync(request, cancellationToken);
 
     var parameters = new Dictionary<string, object>()
     {

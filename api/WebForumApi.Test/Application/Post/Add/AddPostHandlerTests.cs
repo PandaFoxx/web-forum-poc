@@ -1,4 +1,5 @@
 using System.Security;
+using FluentValidation;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using WebForumApi.Application.Post.Add;
@@ -10,13 +11,16 @@ public sealed class AddPostHandlerTests
 {
   private readonly ISessionManager sessionManager;
   private readonly IDataAccess dataAccess;
+  private readonly IValidator<AddPostRequest> validator;
   private readonly AddPostHandler handler;
 
   public AddPostHandlerTests()
   {
     sessionManager = Substitute.For<ISessionManager>();
     dataAccess = Substitute.For<IDataAccess>();
-    handler = new AddPostHandler(sessionManager, dataAccess);
+    validator = Substitute.For<IValidator<AddPostRequest>>();
+
+    handler = new AddPostHandler(sessionManager, dataAccess, validator);
   }
 
   [Fact]

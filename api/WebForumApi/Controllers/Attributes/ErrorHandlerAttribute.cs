@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +50,7 @@ public sealed class ErrorHandlerAttribute(
       SecurityException => new ForbiddenObjectResult(errorResponse),
       ArgumentNullException => new BadRequestObjectResult(errorResponse),
       ArgumentException => new BadRequestObjectResult(errorResponse),
-      ValidationException => new BadRequestObjectResult(errorResponse),
+      FluentValidation.ValidationException => new BadRequestObjectResult(errorResponse),
       _ => new ErrorResponse(errorResponse)
     };
 

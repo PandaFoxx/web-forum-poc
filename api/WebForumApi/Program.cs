@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using FluentValidation;
+using WebForumApi.Application.Post.Add;
 using WebForumApi.Controllers;
 using WebForumApi.Data;
 using WebForumApi.Domain;
@@ -18,11 +20,15 @@ internal class Program
       options.Filters.Add<ErrorHandlerAttribute>()
     );
 
+    // Register services
     builder.Services.AddMemoryCache();
-
     builder.Services.AddTransient<IDataAccess, DataAccess>();
     builder.Services.AddTransient<ISessionManager, SessionManager>();
 
+    // Register validators
+    builder.Services.AddTransient<IValidator<AddPostRequest>, AddPostValidator>();
+
+    // Register settings
     builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection(DatabaseSettings.Position));
 
     var app = builder.Build();
