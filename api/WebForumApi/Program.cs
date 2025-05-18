@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using WebForumApi.Application.Post.Add;
+using WebForumApi.Application.Post.Comment;
 using WebForumApi.Controllers;
 using WebForumApi.Data;
 using WebForumApi.Domain;
@@ -27,6 +28,7 @@ internal class Program
 
     // Register validators
     builder.Services.AddTransient<IValidator<AddPostRequest>, AddPostValidator>();
+    builder.Services.AddTransient<IValidator<AddPostCommentRequest>, AddPostCommentValidator>();
 
     // Register settings
     builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection(DatabaseSettings.Position));

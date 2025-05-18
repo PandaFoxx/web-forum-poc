@@ -86,6 +86,40 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Add Post Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Access-Token",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"postGuid\": \"3AA82C25-9B29-4ED8-8186-65BC6C3549B9\",\r\n    \"content\": \"postman content\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/api/post/comment",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"api",
+								"post",
+								"comment"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
