@@ -27,6 +27,19 @@ public sealed class AddPostValidatorTests
   }
 
   [Fact]
+  public void Validation_Should_Fail_When_Values_Empty()
+  {
+    var request = new AddPostRequest();
+
+    var sut = validator.TestValidate(request);
+
+    Assert.False(sut.IsValid);
+
+    sut.ShouldHaveValidationErrorFor(x => x.Title);
+    sut.ShouldHaveValidationErrorFor(x => x.Content);
+  }
+
+  [Fact]
   public void Validation_Should_Fail_When_Values_Too_Short()
   {
     var request = new AddPostRequest

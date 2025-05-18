@@ -28,9 +28,9 @@ public sealed class AddPostValidator
 {
   public AddPostValidator()
   {
-    RuleFor(x => x.Title).Length(1, 200);
+    RuleFor(x => x.Title).NotNull().Length(1, 200);
 
-    RuleFor(x => x.Content).Length(1, 1000);
+    RuleFor(x => x.Content).NotNull().Length(1, 1000);
   }
 }
 
