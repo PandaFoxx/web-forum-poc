@@ -56,6 +56,19 @@
 			"item": [
 				{
 					"name": "Add Post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.environment.set(\"post_guid\", response[\"postGuid\"]);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -67,7 +80,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"title\",\r\n    \"content\": \"content\"\r\n}",
+							"raw": "{\r\n    \"title\": \"{{$randomBs}}\",\r\n    \"content\": \"{{$randomWords}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -100,7 +113,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"postGuid\": \"3AA82C25-9B29-4ED8-8186-65BC6C3549B9\",\r\n    \"content\": \"postman content\"\r\n}",
+							"raw": "{\r\n    \"postGuid\": \"{{post_guid}}\",\r\n    \"content\": \"{{$randomPhrase}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -134,7 +147,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"postGuid\": \"3AA82C25-9B29-4ED8-8186-65BC6C3549B9\",\r\n    \"unlike\": false\r\n}",
+							"raw": "{\r\n    \"postGuid\": \"{{post_guid}}\",\r\n    \"unlike\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -168,7 +181,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"postGuid\": \"81FF1E76-4AA8-4901-89F4-E228C720F84F\",\r\n    \"tagId\": 1\r\n}",
+							"raw": "{\r\n    \"postGuid\": \"{{post_guid}}\",\r\n    \"tagId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
