@@ -188,6 +188,64 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Access-Token",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/api/post?filterUserGuid=&filterDateFrom=&filterDateTo=&filterTagId=&sortColumn=&sortDirection=&pageSize=&pageNumber",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"api",
+								"post"
+							],
+							"query": [
+								{
+									"key": "filterUserGuid",
+									"value": ""
+								},
+								{
+									"key": "filterDateFrom",
+									"value": ""
+								},
+								{
+									"key": "filterDateTo",
+									"value": ""
+								},
+								{
+									"key": "filterTagId",
+									"value": ""
+								},
+								{
+									"key": "sortColumn",
+									"value": ""
+								},
+								{
+									"key": "sortDirection",
+									"value": ""
+								},
+								{
+									"key": "pageSize",
+									"value": ""
+								},
+								{
+									"key": "pageNumber",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
