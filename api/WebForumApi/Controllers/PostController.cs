@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebForumApi.Application.Post.Add;
 using WebForumApi.Application.Post.Comment;
 using WebForumApi.Application.Post.Like;
+using WebForumApi.Application.Post.Tag;
 
 namespace WebForumApi.Controllers;
 
@@ -43,6 +44,19 @@ public sealed class PostController(
   public async Task<IActionResult> LikePost(
     [FromHeader(Name = "X-Access-Token")] string accessToken,
     LikePostRequest request,
+    CancellationToken cancellationToken
+  )
+  {
+    request.AccessToken = accessToken;
+
+    await mediator.Send(request, cancellationToken);
+    return NoContent();
+  }
+
+  [HttpPost("tag")]
+  public async Task<IActionResult> TagPost(
+    [FromHeader(Name = "X-Access-Token")] string accessToken,
+    TagPostRequest request,
     CancellationToken cancellationToken
   )
   {
