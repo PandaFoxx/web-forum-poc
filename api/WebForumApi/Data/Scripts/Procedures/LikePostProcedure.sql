@@ -53,7 +53,7 @@ BEGIN
     SELECT 1
     FROM [dbo].[post]
     WHERE @Unlike = 0
-	  AND [post_id] = @PostId
+    AND [post_id] = @PostId
     AND [user_id] = @UserId
   )
     THROW 50001, 'Unable to like own post', 1;
@@ -66,7 +66,7 @@ BEGIN
     SELECT 1
     FROM [dbo].[post_like]
     WHERE @Unlike = 0
-	  AND [post_id] = @PostId
+    AND [post_id] = @PostId
     AND [user_id] = @UserId
   )
     THROW 50001, 'Unable to like post again', 1;
@@ -81,7 +81,7 @@ BEGIN
     VALUES
     (@PostId, @UserId);
 
-	  SELECT SCOPE_IDENTITY() AS [post_like_id];
+    SELECT SCOPE_IDENTITY() AS [post_like_id];
   END
   ELSE
   BEGIN
@@ -89,6 +89,6 @@ BEGIN
     WHERE [post_id] = @PostId
     AND [user_id] = @UserId;
 
-	  SELECT 0 AS [post_like_id];
+    SELECT 0 AS [post_like_id];
   END
 END
