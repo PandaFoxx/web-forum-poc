@@ -6,7 +6,7 @@ GO
 
 IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE [name] = 'iidentifii-user')
 BEGIN
-	CREATE LOGIN [iidentifii-user] WITH PASSWORD = ''; -- TODO enter password manually or inject from pipeline
+	CREATE LOGIN [iidentifii-user] WITH PASSWORD = ''; -- TODO enter password manually or inject from pipeline - then update ConnectionString in appsettings.json
 END
 GO
 
