@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "1cb16935-ecfc-44f0-911f-dc0f6b0f47e6",
 		"name": "Web Forum API",
+		"description": "A web forum for a small number of users (< 100). The forum is a basic text system which has the capabilities to add posts, retrieve posts, and like posts. Management does not believe in users editing or deleting existing posts, for ethical reasons.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "10085975"
 	},
@@ -45,7 +46,8 @@
 								"api",
 								"user"
 							]
-						}
+						},
+						"description": "Log into the API with a user to generate an Access Token.\n\nThis values is automatically copied to an environment variable where it is used as a header value to authenticate requests."
 					},
 					"response": []
 				}
@@ -96,7 +98,75 @@
 								"api",
 								"post"
 							]
-						}
+						},
+						"description": "The request creates a post with a title and content."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Access-Token",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/api/post?filterUserGuid=&filterDateFrom=&filterDateTo=&filterTagId=&sortColumn=&sortDirection=&pageSize=&pageNumber=",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"api",
+								"post"
+							],
+							"query": [
+								{
+									"key": "filterUserGuid",
+									"value": "",
+									"description": "Refer to \"postUserGuid\" for options"
+								},
+								{
+									"key": "filterDateFrom",
+									"value": "",
+									"description": "Use ISO format: yyyy-MM-dd"
+								},
+								{
+									"key": "filterDateTo",
+									"value": "",
+									"description": "Use ISO format: yyyy-MM-dd"
+								},
+								{
+									"key": "filterTagId",
+									"value": "",
+									"description": "Options are: 1 or nothing"
+								},
+								{
+									"key": "sortColumn",
+									"value": "",
+									"description": "post_date or like_count"
+								},
+								{
+									"key": "sortDirection",
+									"value": "",
+									"description": "ASC or DESC"
+								},
+								{
+									"key": "pageSize",
+									"value": "",
+									"description": "Default: 10"
+								},
+								{
+									"key": "pageNumber",
+									"value": "",
+									"description": "Default: 1"
+								}
+							]
+						},
+						"description": "Get a list of posts including comments, tags, number of likes and each author per post and comment.\n\nThis data can be filtered using the parameters provided.\n\nThe request does not require user authentication.\n\nHowever, actions performed on posts like adding a comment, liking and tagging do require user authentication."
 					},
 					"response": []
 				},
@@ -130,7 +200,8 @@
 								"post",
 								"comment"
 							]
-						}
+						},
+						"description": "Add a comment to a post."
 					},
 					"response": []
 				},
@@ -164,7 +235,8 @@
 								"post",
 								"like"
 							]
-						}
+						},
+						"description": "Like a post.\n\nYou cannot like your own post.\n\nBut you can unlike a post that you have liked before."
 					},
 					"response": []
 				},
@@ -198,65 +270,8 @@
 								"post",
 								"tag"
 							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Posts",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Access-Token",
-								"value": "{{access_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{api_host}}/api/post?filterUserGuid=&filterDateFrom=&filterDateTo=&filterTagId=&sortColumn=&sortDirection=&pageSize=&pageNumber=",
-							"host": [
-								"{{api_host}}"
-							],
-							"path": [
-								"api",
-								"post"
-							],
-							"query": [
-								{
-									"key": "filterUserGuid",
-									"value": ""
-								},
-								{
-									"key": "filterDateFrom",
-									"value": ""
-								},
-								{
-									"key": "filterDateTo",
-									"value": ""
-								},
-								{
-									"key": "filterTagId",
-									"value": ""
-								},
-								{
-									"key": "sortColumn",
-									"value": ""
-								},
-								{
-									"key": "sortDirection",
-									"value": ""
-								},
-								{
-									"key": "pageSize",
-									"value": ""
-								},
-								{
-									"key": "pageNumber",
-									"value": ""
-								}
-							]
-						}
+						},
+						"description": "Tag a post as `Misleading or false information`\n\nTo do this you must log in as a moderator.\n\nThe default value for this tag is `1`"
 					},
 					"response": []
 				}
