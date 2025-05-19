@@ -25,12 +25,12 @@ Example usage:
 
 EXEC GetPostsProcedure
 	@Passphrase = 'secret',
-	@FilterUserGuid = NULL, --'E0689550-A67B-4C3F-BA3F-6B08FA63D829',
-	@FilterDateFrom = '2025-05-18 18:32:08.303', --NULL,
-	@FilterDateTo = '2025-05-18 18:32:13.660', --NULL,
-	@FilterTagId = NULL, --1,
-	@SortColumn = 'post_date',
-	@SortDirection = 'ASC',
+	@FilterUserGuid = NULL, --'E0689550-A67B-4C3F-BA3F-6B08FA63D829'
+	@FilterDateFrom = '2025-05-18 18:32:08.303', --NULL
+	@FilterDateTo = '2025-05-18 18:32:13.660', --NULL
+	@FilterTagId = NULL, --1
+	@SortColumn = 'post_date', -- or 'like_count'
+	@SortDirection = 'ASC', -- or 'DESC'
 	@PageSize = 4,
 	@PageNumber = 1
 
