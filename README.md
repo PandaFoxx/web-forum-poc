@@ -1,2 +1,44 @@
 # Web Forum POC
 API and datastore backend of a web forum for a small number of users (&lt; 100). The forum is a basic text system which has the capabilities to add posts, retrieve posts, and like posts. Management does not believe in users editing or deleting existing posts, for ethical reasons
+
+# Technology
+
+## Datastore
+
+Using Microsoft SQL Server to store data. This decision was made because of the stability and robustness of the technology. Tables were planned upfront using [dbdiagram](https://dbdiagram.io/d/68272cb01227bdcb4ea2a66e) and imported to creat the database. [flyway](https://www.red-gate.com/products/flyway/) can be used to automate the migration of schema changes throughout the project, but since this is premium software, I decided on a manual approach for this project. SQL Server is useful when utilising stored procedures, as this allows for flexible and advanced queries to be constructed. The business logic can then exist in the database for optimisation and performance. The logic can then be tested using [tSQLt](https://tsqlt.org/).
+
+SQL Server is supported by .NET out-of-the-box being both Microsoft technologies. However, [Dapper](https://www.learndapper.com/) is the preferred means of working with queries
+
+## API
+
+For the API I like the `veritcal slice` pattern with [MediatR](https://github.com/jbogard/MediatR) as it allows for an easy to work with codebase, where all the relevant code is contained together.
+
+# Setup
+
+## Database
+
+Due to time constraints, the database will need to be configured manually.
+
+Please go to the [db](https://github.com/PandaFoxx/web-forum-poc/tree/master/db) folder and run each script in `Setup` and then each script in `Stored Procedures` using [SQL Server Management Studio](https://learn.microsoft.com/en-us/ssms/download-sql-server-management-studio-ssms)
+
+1. `00_Create_Database.sql` requires a password - this can be anything, but make sure to also update the connection string in [appsettings.json](https://github.com/PandaFoxx/web-forum-poc/blob/master/api/WebForumApi/appsettings.json) with the same value.
+1. While in `appsettings.json` set a passphrase as well with a value no bigger than 64 characters. (To decypt the test data locally use `1qazXSW@3edc`)
+
+## API
+
+The API can be run using any IDE that supports .NET ([Visual Studio](https://visualstudio.microsoft.com/) or [VSCode](https://code.visualstudio.com/) or [Rider](https://www.jetbrains.com/rider/))
+
+1. Restore Nuget packages.
+1. Build solution in this folder: [api](https://github.com/PandaFoxx/web-forum-poc/tree/master/api)
+1. Run project hosted on https://localhost:7098/
+
+> Note for VSCode, the following files allow for the project to launch:
+> - [tasks.json](https://github.com/PandaFoxx/web-forum-poc/blob/master/.vscode/tasks.json)
+> - [launch.json](https://github.com/PandaFoxx/web-forum-poc/blob/master/.vscode/launch.json)
+
+## Client
+
+The Postman Collection can be imported from [postman](https://github.com/PandaFoxx/web-forum-poc/tree/master/postman).
+
+Use the `user login` endpoint to generate an access token - a script copies this to the environment variables so that you don't have to copy and paste for each request.
+
